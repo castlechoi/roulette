@@ -61,7 +61,7 @@ export class Marble {
     this.weight = weight;
     this.physics = physics;
 
-    this._maxCoolTime = 1000 + (1 - this.weight) * 4000;
+    this._maxCoolTime = (1000 + (1 - this.weight) * 4000);
     this._coolTime = this._maxCoolTime * Math.random();
     this._skillRate = 0.2 * this.weight;
 
@@ -117,6 +117,13 @@ export class Marble {
     }
   }
 
+  public updateSkillAcc() {
+    const accSkill:HTMLElement = document.getElementById('accSkill')!;
+    var accValue = parseInt((accSkill as HTMLInputElement).value);
+
+    this._maxCoolTime = (1000 + (1 - this.weight) * 4000) / accValue;
+  }
+
   render(
     ctx: CanvasRenderingContext2D,
     zoom: number,
@@ -124,6 +131,7 @@ export class Marble {
     isMinimap: boolean = false,
     skin?: CanvasImageSource,
   ) {
+    
     ctx.save();
     if (isMinimap) {
       this._renderMinimap(ctx);

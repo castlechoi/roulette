@@ -258,20 +258,27 @@
           }
 
           &.active {
-            background: #333;
+            background: #999;
           }
         }
 
         input[type=number] {
-          box-sizing: border-box;
-          text-align: center;
+          box-sizing: border-box !important;
+          text-align: center !important;
         }
+      }
+      input[type=number]{
+        background-color: #999;
+        border-radius: 5px;
+        box-sizing: border-box;
+        text-align: center;
+        color:white;
       }
     }
 
     #donate {
       position: fixed;
-      bottom: calc(160px + 1.5rem);
+      bottom: calc(230px + 1.5rem);
       left: 1rem;
       z-index: 999;
       visibility: visible;
@@ -423,6 +430,8 @@
       const nameSource = getNames();
       const nameSet = new Set();
       const nameCounts = {};
+      const entireBallCnt = 1
+      entireBallCnt = document.querySelector('#ballCnt').value;
       nameSource.forEach(nameSrc => {
         const name = parseName(nameSrc);
         const key = name.weight > 1 ? `${name.name}/${name.weight}` : name.name;
@@ -430,7 +439,7 @@
           nameSet.add(key);
           nameCounts[key] = 0;
         }
-        nameCounts[key] += name.count;
+        nameCounts[key] += entireBallCnt;
       });
       const result = [];
       Object.keys(nameCounts).forEach(key => {
@@ -443,7 +452,8 @@
 
       const oldValue = document.querySelector('#in_names').value;
       const newValue = result.join(',');
-
+      console.log(oldValue);
+      console.log(newValue);
       if (oldValue !== newValue) {
         document.querySelector('#in_names').value = newValue;
         getReady();
@@ -478,8 +488,14 @@
 
     document.querySelector('#in_winningRank').addEventListener('change', (e) => {
       const v = parseInt(e.target.value, 10);
-      winnerType = 'custom';
       setWinnerRank(isNaN(v) ? 0 : v);
+    });
+
+    document.querySelector('#ballCnt').addEventListener('change', (e) => {
+      getReady();
+    });
+    document.querySelector('#accSkill').addEventListener('change', (e) => {
+      getReady();
     });
 
     document.querySelector('.btn-last-winner').addEventListener('click', () => {
@@ -576,6 +592,20 @@
       </label>
       <input type="checkbox" id="chkSkill" checked />
     </div>
+    <div class="row">
+      <label>
+        <i class="icon bomb"></i>
+        <span data-trans>스킬 가속</span>
+      </label>
+      <input type="number" id="accSkill" min="0.5" max="100" step="0.5" value="1"/>
+    </div>
+    <div class="row">
+      <label>
+        <i class="icon bomb"></i>
+        <span data-trans>잔여 개수</span>
+      </label>
+      <input type="checkbox" id="chkResidual" checked />
+    </div>
   </div>
   <div class="left">
     <h3 data-trans>Enter names below</h3>
@@ -589,6 +619,12 @@
         <i class="icon play"></i>
         <span data-trans>Start</span>
       </button>
+    </div>
+    <div class="row">
+      <label>
+        <span data-trans>공 개수 일괄 적용</span>
+      </label>
+      <input type="number" id="ballCnt" min="1" max="200" step="1" value="1"/>
     </div>
   </div>
 </div>

@@ -329,6 +329,9 @@ export class Roulette extends EventTarget {
   public setMarbles(names: string[]) {
     this.reset();
     const arr = names.slice();
+    const ballCnt:HTMLElement = document.getElementById('ballCnt')!;
+    var ballValue = parseInt((ballCnt as HTMLInputElement).value);
+    // let ballCnt = document.querySelector('#ballCnt').value.trim();
 
     let maxWeight = -Infinity;
     let minWeight = Infinity;
@@ -337,7 +340,7 @@ export class Roulette extends EventTarget {
       .map((nameString) => {
         const result = parseName(nameString);
         if (!result) return null;
-        const { name, weight, count } = result;
+        var { name, weight, count } = result;
         if (weight > maxWeight) maxWeight = weight;
         if (weight < minWeight) minWeight = weight;
         return { name, weight, count };
@@ -350,7 +353,7 @@ export class Roulette extends EventTarget {
     members.forEach((member) => {
       if (member) {
         member.weight = 0.1 + (gap ? (member.weight - minWeight) / gap : 0);
-        totalCount += member.count;
+        totalCount += (member.count * ballValue);
       }
     });
 
@@ -360,7 +363,7 @@ export class Roulette extends EventTarget {
       .sort(() => Math.random() - 0.5);
     members.forEach((member) => {
       if (member) {
-        for (let j = 0; j < member.count; j++) {
+        for (let j = 0; j < member.count * ballValue; j++) {
           const order = orders.pop() || 0;
           this._marbles.push(
             new Marble(
@@ -374,6 +377,7 @@ export class Roulette extends EventTarget {
         }
       }
     });
+    this._marbles.forEach((marble)=>(marble.updateSkillAcc()))
     this._totalMarbleCount = totalCount;
   }
 
